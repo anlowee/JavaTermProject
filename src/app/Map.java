@@ -13,6 +13,8 @@ public class Map implements Common {
     public static int[][] tileSets = new int[TILE_COL][TILE_ROW];
 
     public void initTile() {
+    	
+    	// number every tile
 
         //100-grass, 101-soil, 102-sand, 103-water, 104-house, 0~19-crops
         for (int i = 0; i < TILE_COL; i++)
@@ -58,11 +60,13 @@ public class Map implements Common {
 
     public Map() {
 
+    	// initialize parameters
         initTile();
 
         mapX = MAP_LEFTUP_X;
         mapY = MAP_LEFTUP_Y;
 
+        // the map is not on boundary at beginning
         isOnMapDownSide = false;
         isOnMapLeftSide = false;
         isOnMapUpSide = false;
@@ -71,7 +75,12 @@ public class Map implements Common {
 
     public static boolean isMapOnSide() {
 
-        boolean flag = false;
+    	// check if map is on boundary, 
+    	//take left as an example, if mapX == 0, means map is on left boundary,
+    	// at this time, if player keep moving toward left and exceed the center view area
+    	// map won't roll
+    	
+        boolean flag = false;	// use to mark if map is on boundary
 
         if (mapX == 0) {
             isOnMapLeftSide = true;

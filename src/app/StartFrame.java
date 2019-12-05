@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 public class StartFrame extends JFrame implements Common {
 	
 	/**
-	 * 
+	 * this is where the entire game begin
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel menuJPanel;
@@ -37,6 +37,7 @@ public class StartFrame extends JFrame implements Common {
         setTitle("Hay Day");
         setLocationRelativeTo(null);
         
+        // start menu
         startButton = new JButton("Start");
         how2playButton = new JButton("Guide");
         supportButton = new JButton("Support Me");
@@ -60,6 +61,7 @@ public class StartFrame extends JFrame implements Common {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
+				// initialize main frame, do game loop
 				MainFrame ex = new MainFrame();
 				ex.setVisible(true);
 				setVisible(false);
@@ -96,6 +98,7 @@ public class StartFrame extends JFrame implements Common {
 	
     public static void main(String[] args) throws IOException {
 
+    	// open the start frame
         new Load();
         
         EventQueue.invokeLater(() -> {

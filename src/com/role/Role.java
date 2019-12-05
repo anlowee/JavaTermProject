@@ -94,6 +94,7 @@ public abstract class Role implements Common {
 
     public Role() {
 
+    	// initialize
         npcAction = new NPCAction(this);
         isLived = true;
     }
@@ -105,6 +106,7 @@ public abstract class Role implements Common {
 
     public static int checkWhere(int x, int y) {
 
+    	// get which kind of tile the role is standing on
         int col = x / TILE_WIDTH;
         int row = y / TILE_HEIGHT;
 
@@ -116,7 +118,9 @@ public abstract class Role implements Common {
 
     public boolean isCollision(int x, int y, int id) {
 
-    	int bias = 100;
+    	// check if absolute coordinate (x, y) is collide with other things
+    	
+    	int bias = 100;	// because player's method move() is a bit different from NPC's, NPC need bias to fix
     	if (id == -1)
     		bias = 0;
         // is collide with map margin
@@ -135,7 +139,7 @@ public abstract class Role implements Common {
             }
         }
 
-        // is collide with map obj
+        // is collide with map object
         int leftfoot = checkWhere(x, y + PLAYER_HEIGHT);
         int rightfoot = checkWhere(x + PLAYER_WIDTH, y + PLAYER_HEIGHT);
         if ((leftfoot == HOUSE || rightfoot == HOUSE) || (leftfoot == WATER || rightfoot == WATER))
@@ -146,6 +150,7 @@ public abstract class Role implements Common {
 
     public void randomAction() {
 
+    	// randomly generate a integer between 0~20. 0~3 means four directions, else means static
         act = (int) (new Random().nextDouble() * (20.0 - 0.0));
     }
 
@@ -185,6 +190,7 @@ public abstract class Role implements Common {
         }
     }
 
+    // these features are not complete...
     public void isLevelUp() {
         // TODO
     }

@@ -14,6 +14,8 @@ import com.warehouse.Ware;
 
 public class Save implements Common {
 
+	// relative with class Load, use output stream to write in Save.dat file
+	
 	public Save() throws IOException {
 
 		File file = new File("D:\\Save.dat");
@@ -27,7 +29,6 @@ public class Save implements Common {
 		
 		FileOutputStream fileOutputStream = new FileOutputStream(file);
 		BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
-		@SuppressWarnings("resource")
 		DataOutputStream dataOutputStream = new DataOutputStream(bufferedOutputStream);
 		
 		dataOutputStream.writeInt(Player.x);

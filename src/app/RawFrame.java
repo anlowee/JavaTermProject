@@ -20,7 +20,7 @@ import img.CropsImg;
 public class RawFrame extends JFrame implements Common {
 
     /**
-     *
+     * this frame show all crops you have, like a warehouse
      */
     private static final long serialVersionUID = 1L;
 
@@ -103,11 +103,12 @@ public class RawFrame extends JFrame implements Common {
                 case KeyEvent.VK_ENTER:
                     int id = row * 4 + col;
                     int inv = Ware.rawInventory[id];
-                    if (inv <= 0) {
+                    if (inv <= 0) {	// you must have at least one, or you cannot sell it
                         JOptionPane.showMessageDialog(null, "You don't have this kind of raw!");
                         break;
                     }
 
+                    // input how many you want to sell, must input an integer
                     String inputValue = JOptionPane.showInputDialog(null, "How many to sell? 0~" + inv);
                     int num = Integer.valueOf(inputValue);
                     if (num < 0 || num > inv) {
@@ -115,7 +116,9 @@ public class RawFrame extends JFrame implements Common {
                         break;
                     }
                     
+                    // sell what player selected
                     int earn = Ware.sell(num, id);
+                    // show sell-success message
                     JOptionPane.showMessageDialog(null, num + " " + CROPS_NAME[id] + " sold!\n$" + earn + " get!");
                     setTitle("$" + Player.money);
                     updateInventory();

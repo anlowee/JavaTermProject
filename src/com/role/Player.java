@@ -18,36 +18,44 @@ import app.RawFrame;
 
 public class Player extends Role {
 
+	// used to check if the map should be moved
     public static boolean isOnViewDownSide;
     public static boolean isOnViewUpSide;
     public static boolean isOnViewLeftSide;
     public static boolean isOnViewRightSide;
     
-    public static boolean isTalking = false;
+    public static boolean isTalking = false;	// check if player start a talking with others
     
-    public static boolean isMission4Complted = false;
+    public static boolean isMission4Complted = false;	// check if mission completed
     
-    public static int dir;
+    // move parameter
+    public static int dir;	// direction
+    // coordinate in frame(used to draw)
     public static int x;
     public static int y;
+    // absolute coordinate
     public static int absX;
     public static int absY;
+    // move speed
     public static int dx;
     public static int dy;
-    public static int id;
-    public static int gif;
+    
+    public static int id;	// player ID
+    
+    // GIF parameter
+    public static int gif;	
     public static long tGif;
-    public static Image img;
+    public static Image img;	// current image(relative to current status)
 
-    public static int seedsSelect;// seeds'id that player select
+    public static int seedsSelect;	// seeds'id that player select
 
     public static int money;
-    public static int misson = 0;
+    public static int misson = 0;	// record the current mission ID
 
-    public static String words = "";
-    public static String name = "";
+    public static String words = "";	// what player will talk
+    public static String name = "";	// player's name
 
-    // 10 woords
+    // randomly talking words(10 sentences)
     private String[] wordsList = { "La~La~La~", "\"It's no use going back to yesterday.\"",
             "\"The choice must be yours.\"", "\"Which way I ought to go from here?\"", "\"Then it doesn't matter.\"",
             "\" There is a place.\"", "\"A land full of wonder!\"", "\"Are you going to die?\"", "\"Transform!\"",
@@ -57,10 +65,14 @@ public class Player extends Role {
     @Override
     public void getTalkArea() {
     	
+    	// this method used to get talk area, which is a rectangle in front of player and NPC,
+    	// when player enter another NPC's talk area, player can talk with him
     	switch (dir) {
         case 0:
+        	// talk area left-up corner coordinate
             talkAreaX = absX - PLAYER_WIDTH;
             talkAreaY = absY - PLAYER_HEIGHT;
+            // talk area rectangle width and height
             talkAreaWidth = 3 * PLAYER_WIDTH;
             talkAreaHeight = PLAYER_HEIGHT;
             break;
@@ -83,6 +95,7 @@ public class Player extends Role {
             talkAreaHeight = 2 * PLAYER_HEIGHT;
             break;
         default:
+        	// meaningless, just ignore
             talkAreaX = absX + PLAYER_WIDTH / 2;
             talkAreaY = absY + PLAYER_HEIGHT / 2;
             talkAreaWidth = 0;
@@ -90,12 +103,14 @@ public class Player extends Role {
             break;
     }
 
+    // talk area center's coordinate
     talkAreaCenterX = talkAreaX + talkAreaWidth / 2;
     talkAreaCenterY = talkAreaY + talkAreaHeight / 2;
     }
     
     public static void init() {
     	
+    	// initialize
     	x = PLAYER_START_X;
         y = PLAYER_START_Y;
 
@@ -106,11 +121,11 @@ public class Player extends Role {
         dy = 0;
         dir = 2;
 
-        seedsSelect = -1;// default, that means select No.1
+        seedsSelect = -1;	// default, select none
 
         money = 0;
         
-        id = -1;
+        id = -1;	// player's special ID
 
         isOnViewDownSide = false;
         isOnViewUpSide = false;
@@ -133,7 +148,7 @@ public class Player extends Role {
 
         Map.isMapOnSide();
 
-        // judge is player on the viewside
+        // check if player is on view boundary and then determine if map should be moved
         if (!Map.isOnMapRightSide && x + PLAYER_WIDTH >= PLAYER_VIEW_RIGHTSIDE) {
             isOnViewRightSide = true;
             return true;
@@ -163,6 +178,7 @@ public class Player extends Role {
 
     public void keyReleased(KeyEvent e) {
 
+    	// when WSAD are released, player stop
         int key = e.getKeyCode();
         switch (key) {
         case KeyEvent.VK_W:
@@ -179,17 +195,18 @@ public class Player extends Role {
 
     public void keyPressed(KeyEvent e) {
 
+    	// get which tile are player standing on
         int col = (absX + PLAYER_WIDTH / 2) / TILE_WIDTH;
         int row = (absY + PLAYER_HEIGHT / 2) / TILE_HEIGHT;
         int id = Map.tileSets[col][row];// use player's center to location
 
         int key = e.getKeyCode();
         switch (key) {
-        // W, S, A, D is control to move
+        // W, S, A, D is control to move, when talking, player cannot move
         case KeyEvent.VK_W:
             if (isTalking)
                 break;
-            dir = 0;
+            dir = 0;	// up
             if (isOnViewUpSide)
                 break;
             dy = -HUMAN_MOVE_SPEED;
@@ -198,7 +215,7 @@ public class Player extends Role {
         case KeyEvent.VK_S:
             if (isTalking)
                 break;
-            dir = 2;
+            dir = 2;	// down
             if (isOnViewDownSide)
                 break;
             dy = HUMAN_MOVE_SPEED;
@@ -207,7 +224,7 @@ public class Player extends Role {
         case KeyEvent.VK_A:
             if (isTalking)
                 break;
-            dir = 3;
+            dir = 3;	// left
             if (isOnViewLeftSide)
                 break;
             dx = -HUMAN_MOVE_SPEED;
@@ -216,29 +233,30 @@ public class Player extends Role {
         case KeyEvent.VK_D:
             if (isTalking)
                 break;
-            dir = 1;
+            dir = 1;	// right
             if (isOnViewRightSide)
                 break;
             dx = HUMAN_MOVE_SPEED;
             dy = 0;
             break;
-        case KeyEvent.VK_P:// plant
-            if (id == SOIL) {
-                if (seedsSelect != -1) {
+        case KeyEvent.VK_P:	// plant
+            if (id == SOIL) {	// check if it's the legal tile
+                if (seedsSelect != -1) {	// check if there're current seeds you select
                     boolean flag = Farm.plant(seedsSelect, col * TILE_WIDTH, row * TILE_HEIGHT);
-                    if (!flag) {
+                    if (!flag) {	// plant failed
                         words = "\"I don't have this kind of seeds...\"";
                         seedsSelect = -1;
                     }
                 } else
-                    words = "\"I must choose a kind of seeds first...\"";
+                    words = "\"I must choose a kind of seeds first...\"";	// seedsSelect = -1 means you have not selected a seed
             } else
                 words = "\"Must plant on field...\"";
             break;
-        case KeyEvent.VK_T:
+        case KeyEvent.VK_T:	// talk
             getTalkArea();
-            boolean flag = false;
+            boolean flag = false;	// used to check if player have found somebody to talk
             for (Role role : NPCs.npc) {
+            	// check each NPC if they are in player's talk area(or if player in their talk area, no difference)
                 role.getTalkArea();
                 if (Math.abs(talkAreaCenterX - role.talkAreaCenterX) < Math.abs(talkAreaWidth + role.talkAreaWidth) / 2
                         && Math.abs(talkAreaCenterY - role.talkAreaCenterY) < Math
@@ -252,7 +270,7 @@ public class Player extends Role {
             if (!flag)
                 words = "\"Nobody to talk...\"";
             break;
-        case KeyEvent.VK_R:
+        case KeyEvent.VK_R:	// recruit(similar with talk)
             if (Player.misson < 4)
                 break;
 
@@ -275,7 +293,7 @@ public class Player extends Role {
             if (!flag)
                 words = "\"Where're the old couple...\"";
             break;
-        case KeyEvent.VK_H:// hay
+        case KeyEvent.VK_H:	// hay
             flag = false;
             
             if (id >= 0 && id <= CROPS_TOTAL_CATAGORIES - 1) {
@@ -295,7 +313,7 @@ public class Player extends Role {
             if (!flag)
                 words = "\"They aren't mature...\"";
             break;
-        case KeyEvent.VK_C:// dig
+        case KeyEvent.VK_C:	// dig
             if (id >= 0 && id <= 19) {
                 // locate which crops to dig
                 for (int i = 0; i < Farm.cropsArrayList.size(); i++) {
@@ -311,26 +329,26 @@ public class Player extends Role {
         	MenuFrame mf = new MenuFrame();
         	mf.setVisible(true);
         	break;
-        case KeyEvent.VK_1:
+        case KeyEvent.VK_1:	// open seed frame
             SeedsFrame sf = new SeedsFrame();
             sf.setVisible(true);
             break;
-        case KeyEvent.VK_2:
+        case KeyEvent.VK_2:	// open raw frame
             RawFrame rf = new RawFrame();
             rf.setVisible(true);
             break;
-        case KeyEvent.VK_3:
+        case KeyEvent.VK_3:	// show the current mission
             words = "\"" + MISSION_NAME[misson] + "\"";
             break;
-        case KeyEvent.VK_4:
+        case KeyEvent.VK_4:	// open shop frame
             ShopFrame shf = new ShopFrame();
             shf.setVisible(true);
             break;
-        case KeyEvent.VK_5:
+        case KeyEvent.VK_5:	// open item frame
             ItemFrame itf = new ItemFrame();
             itf.setVisible(true);
             break;
-        case KeyEvent.VK_6:
+        case KeyEvent.VK_6: // open help frame
             String message = HELP;
             JOptionPane.showMessageDialog(null, message, "help", JOptionPane.PLAIN_MESSAGE);
             break;
@@ -342,6 +360,7 @@ public class Player extends Role {
     @Override
     public void talk() {
 
+    	// randomly talk
         int index = (int) (new Random().nextDouble() * (10.0 - 0.0));
         index = Math.max(index, 0);
         index = Math.min(index, 9);
@@ -351,14 +370,14 @@ public class Player extends Role {
     @Override
     public void move() {
 
-        if (isTalking)
+        if (isTalking)	// cannot move when talking
             return;
 
         boolean flag = isOnViewSide(x + dx, y + dy);
-        // update absolute coordinate
+        // get absolute coordinate
         absX = x - Map.mapX;
         absY = y - Map.mapY;
-        if (!isCollision(absX + dx, absY + dy, id) && !flag) {
+        if (!isCollision(absX + dx, absY + dy, id) && !flag) {	// if there's no obstacle in the way, player move
             x += dx;
             y += dy;
         }

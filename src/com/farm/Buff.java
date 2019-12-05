@@ -12,6 +12,7 @@ public class Buff extends Thread implements Common {
 
     public void setBuff(int w, int b) {
 
+    	// this method make buff affect
         whichBuff = w;
         current = 0;
         switch (b) {
@@ -33,6 +34,8 @@ public class Buff extends Thread implements Common {
     @Override
     public void run() {
 
+    	// this method used to check if buff is expired
+    	
         while (true) {
 
             current += DELAY;
@@ -53,7 +56,7 @@ public class Buff extends Thread implements Common {
                     Crops.valueBuff = 0;
                     break;
                 }
-                // System.out.println("Stop " + Crops.growBuff);
+                
                 break;
             }
 

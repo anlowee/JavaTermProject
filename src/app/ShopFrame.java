@@ -21,7 +21,7 @@ import img.ItemImg;
 public class ShopFrame extends JFrame implements Common {
 
     /**
-     *
+     * this is shop frame, you can buy seeds and items here
      */
     private static final long serialVersionUID = 1L;
 
@@ -113,12 +113,13 @@ public class ShopFrame extends JFrame implements Common {
                 case KeyEvent.VK_ENTER:
                     int id = row * 4 + col;
                     int max;
-                    if (id < 20) {
-                        max = Player.money / SEEDS_PRICE[id];
-                        if (max == 0) {
+                    if (id < 20) {	// if id < 20, player selected a seed
+                        max = Player.money / SEEDS_PRICE[id];	// maximum seeds player can buy
+                        if (max == 0) {	// player's money cannot afford even a single seed
                             JOptionPane.showMessageDialog(null, "You are too poor!");
                             break;
                         }
+                        // input how many seeds to buy, must an integer
                         String inputValue = JOptionPane.showInputDialog(null, "How many to buy? 0~" + max);
                         if (inputValue == null || inputValue.equals(""))
                             inputValue = new String("0");
@@ -133,7 +134,8 @@ public class ShopFrame extends JFrame implements Common {
                         JOptionPane.showMessageDialog(null,
                                 num + " " + CROPS_NAME[id] + " seeds get!\n" + "Cost $" + cost);
                         setTitle("$" + Player.money);
-                    } else {
+                    } else {	// player selected an item
+                    	// similar with above
                         max = Player.money / ITEM_PRICE[id - CROPS_TOTAL_CATAGORIES];
                         if (max == 0) {
                             JOptionPane.showMessageDialog(null, "You are too poor!");

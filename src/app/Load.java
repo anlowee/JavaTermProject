@@ -28,13 +28,18 @@ import img.MapImg;
 import img.RoleImg;
 
 public class Load implements Common {
+	
+	// this class load all things to initialize the game
 
+	// cause all image source include many sub-pictures, this is sun-pictures' size, used to divide them
     final static int width = 16;
     final static int height = 16;
-    private static URL imageUrl;
+    
+    private static URL imageUrl;	// images' URL
 
     public Load() throws IOException {
         
+    	// load
     	loadData();
         loadCropsImg();
         loadMapImg();
@@ -44,18 +49,19 @@ public class Load implements Common {
     
     public static void loadData() throws IOException {
     	
+    	// new each object to initialize the static variables of it
     	new Map();
     	new Farm();
     	new Ware();
     	
-    	File file = new File("D:\\Save.dat");
-    	if (!file.exists()) {
+    	File file = new File("D:\\Save.dat");	// the save's absolute location, an binary file
+    	if (!file.exists()) {	// if this is a new game(no save), new an object of player and initialize it
     		Player.init();
     	} else {
+    		// use input stream read the data one by one
     		FileInputStream fileInputStream = new FileInputStream(file);
     		BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
-    		@SuppressWarnings("resource")
-			DataInputStream dataInputStream = new DataInputStream(bufferedInputStream);
+    		DataInputStream dataInputStream = new DataInputStream(bufferedInputStream);
     		
     		Player.x = dataInputStream.readInt();
     		Player.y = dataInputStream.readInt();
@@ -199,6 +205,7 @@ public class Load implements Common {
 
     public static void loadItemImg() throws IOException {
 
+    	// load the icon in bottom bar
     	imageUrl = Load.class.getResource("/image/item/coin.png");
         BufferedImage bufimg = ImageIO.read(imageUrl);
         ItemImg.coinImg = bufimg;
@@ -263,16 +270,17 @@ public class Load implements Common {
 
     public static void loadCropsImg() throws IOException {
 
+    	// load all crops' every status image
+    	
     	imageUrl = Load.class.getResource("/image/crops/Crop_Spritesheet.png");
         BufferedImage bufimg = ImageIO.read(imageUrl);
-        //BufferedImage bufimg = ImageIO.read(new File("src/image/crops/Crop_Spritesheet.png"));
 
-        CropsImg.imgCrops[0][5] = bufimg.getSubimage(0, 0, width, height);//crops
-        CropsImg.imgCrops[0][4] = bufimg.getSubimage(width, 0, width, height);//fruited
-        CropsImg.imgCrops[0][3] = bufimg.getSubimage(width * 2, 0, width, height);//flowerd
-        CropsImg.imgCrops[0][2] = bufimg.getSubimage(width * 3, 0, width, height);//seedling
-        CropsImg.imgCrops[0][1] = bufimg.getSubimage(width * 4, 0, width, height);//bud
-        CropsImg.imgCrops[0][0] = bufimg.getSubimage(width * 5, 0, width, height);//seed
+        CropsImg.imgCrops[0][5] = bufimg.getSubimage(0, 0, width, height);	//crops
+        CropsImg.imgCrops[0][4] = bufimg.getSubimage(width, 0, width, height);	//fruited
+        CropsImg.imgCrops[0][3] = bufimg.getSubimage(width * 2, 0, width, height);	//flower
+        CropsImg.imgCrops[0][2] = bufimg.getSubimage(width * 3, 0, width, height);	//seedling
+        CropsImg.imgCrops[0][1] = bufimg.getSubimage(width * 4, 0, width, height);	//bud
+        CropsImg.imgCrops[0][0] = bufimg.getSubimage(width * 5, 0, width, height);	//seed
 
         CropsImg.imgCrops[1][5] = bufimg.getSubimage(width * 6, 0, width, height);
         CropsImg.imgCrops[1][4] = bufimg.getSubimage(width * 7, 0, width, height);
@@ -410,6 +418,7 @@ public class Load implements Common {
 
     public static void loadMapImg() throws IOException {
 
+    	// load map
     	imageUrl = Load.class.getResource("/image/map/map.png");
         BufferedImage bufimg = ImageIO.read(imageUrl);
 		MapImg.imgMap = bufimg;
@@ -417,13 +426,13 @@ public class Load implements Common {
 
     public static void loadRoleImg() throws IOException {
 
+    	// load all characters' images, including four directions with three status
         BufferedImage bufimg;
 
-        // load player img
+        // load player image
         imageUrl = Load.class.getResource("/image/role/player.png");
         bufimg = ImageIO.read(imageUrl);
-        //bufimg = ImageIO.read(new File("src/image/role/player.png"));
-        //up-0, right-1, donw-2, left-3
+        //up-0, right-1, down-2, left-3
         RoleImg.imgPlayer[0][0] = bufimg.getSubimage(32 * 0, 36 * 0, 32, 36);
         RoleImg.imgPlayer[0][1] = bufimg.getSubimage(32 * 2, 36 * 0, 32, 36);
         RoleImg.imgPlayer[0][2] = bufimg.getSubimage(32 * 1, 36 * 0, 32, 36);
@@ -440,10 +449,10 @@ public class Load implements Common {
         RoleImg.imgPlayer[3][1] = bufimg.getSubimage(32 * 2, 36 * 3, 32, 36);
         RoleImg.imgPlayer[3][2] = bufimg.getSubimage(32 * 1, 36 * 3, 32, 36);
 
-        //load old man img
+        //load old man image
         imageUrl = Load.class.getResource("/image/role/townfolk1_m.png");
         bufimg = ImageIO.read(imageUrl);
-        //bufimg = ImageIO.read(new File("src/image/role/townfolk1_m.png"));
+
         RoleImg.imgNPC[0][0][0] = bufimg.getSubimage(32 * 0, 36 * 0, 32, 36);
         RoleImg.imgNPC[0][0][1] = bufimg.getSubimage(32 * 2, 36 * 0, 32, 36);
         RoleImg.imgNPC[0][0][2] = bufimg.getSubimage(32 * 1, 36 * 0, 32, 36);
@@ -460,10 +469,10 @@ public class Load implements Common {
         RoleImg.imgNPC[0][3][1] = bufimg.getSubimage(32 * 2, 36 * 3, 32, 36);
         RoleImg.imgNPC[0][3][2] = bufimg.getSubimage(32 * 1, 36 * 3, 32, 36);
 
-        //load old woman img
+        //load old woman image
         imageUrl = Load.class.getResource("/image/role/townfolk1_f.png");
         bufimg = ImageIO.read(imageUrl);
-        //bufimg = ImageIO.read(new File("src/image/role/townfolk1_f.png"));
+        
         RoleImg.imgNPC[1][0][0] = bufimg.getSubimage(32 * 0, 36 * 0, 32, 36);
         RoleImg.imgNPC[1][0][1] = bufimg.getSubimage(32 * 2, 36 * 0, 32, 36);
         RoleImg.imgNPC[1][0][2] = bufimg.getSubimage(32 * 1, 36 * 0, 32, 36);
@@ -480,10 +489,10 @@ public class Load implements Common {
         RoleImg.imgNPC[1][3][1] = bufimg.getSubimage(32 * 2, 36 * 3, 32, 36);
         RoleImg.imgNPC[1][3][2] = bufimg.getSubimage(32 * 1, 36 * 3, 32, 36);
 
-        //load healer img
+        //load healer image
         imageUrl = Load.class.getResource("/image/role/healer_f.png");
         bufimg = ImageIO.read(imageUrl);
-        //bufimg = ImageIO.read(new File("src/image/role/healer_f.png"));
+        
         RoleImg.imgNPC[2][0][0] = bufimg.getSubimage(32 * 0, 36 * 0, 32, 36);
         RoleImg.imgNPC[2][0][1] = bufimg.getSubimage(32 * 2, 36 * 0, 32, 36);
         RoleImg.imgNPC[2][0][2] = bufimg.getSubimage(32 * 1, 36 * 0, 32, 36);
@@ -500,10 +509,10 @@ public class Load implements Common {
         RoleImg.imgNPC[2][3][1] = bufimg.getSubimage(32 * 2, 36 * 3, 32, 36);
         RoleImg.imgNPC[2][3][2] = bufimg.getSubimage(32 * 1, 36 * 3, 32, 36);
 
-        //load mage img
+        //load mage image
         imageUrl = Load.class.getResource("/image/role/mage_m.png");
         bufimg = ImageIO.read(imageUrl);
-        //bufimg = ImageIO.read(new File("src/image/role/mage_m.png"));
+        
         RoleImg.imgNPC[3][0][0] = bufimg.getSubimage(32 * 0, 36 * 0, 32, 36);
         RoleImg.imgNPC[3][0][1] = bufimg.getSubimage(32 * 2, 36 * 0, 32, 36);
         RoleImg.imgNPC[3][0][2] = bufimg.getSubimage(32 * 1, 36 * 0, 32, 36);
@@ -520,10 +529,10 @@ public class Load implements Common {
         RoleImg.imgNPC[3][3][1] = bufimg.getSubimage(32 * 2, 36 * 3, 32, 36);
         RoleImg.imgNPC[3][3][2] = bufimg.getSubimage(32 * 1, 36 * 3, 32, 36);
 
-        //load roger img
+        //load roger image
         imageUrl = Load.class.getResource("/image/role/roger.png");
         bufimg = ImageIO.read(imageUrl);
-        //bufimg = ImageIO.read(new File("src/image/role/roger.png"));
+        
         RoleImg.imgNPC[4][0][0] = bufimg.getSubimage(32 * 0, 36 * 0, 32, 36);
         RoleImg.imgNPC[4][0][1] = bufimg.getSubimage(32 * 2, 36 * 0, 32, 36);
         RoleImg.imgNPC[4][0][2] = bufimg.getSubimage(32 * 1, 36 * 0, 32, 36);
@@ -540,10 +549,10 @@ public class Load implements Common {
         RoleImg.imgNPC[4][3][1] = bufimg.getSubimage(32 * 2, 36 * 3, 32, 36);
         RoleImg.imgNPC[4][3][2] = bufimg.getSubimage(32 * 1, 36 * 3, 32, 36);
 
-        //load warrior img
+        //load warrior image
         imageUrl = Load.class.getResource("/image/role/warrior_m.png");
         bufimg = ImageIO.read(imageUrl);
-        //bufimg = ImageIO.read(new File("src/image/role/warrior_m.png"));
+        
         RoleImg.imgNPC[5][0][0] = bufimg.getSubimage(32 * 0, 36 * 0, 32, 36);
         RoleImg.imgNPC[5][0][1] = bufimg.getSubimage(32 * 2, 36 * 0, 32, 36);
         RoleImg.imgNPC[5][0][2] = bufimg.getSubimage(32 * 1, 36 * 0, 32, 36);

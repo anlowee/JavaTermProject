@@ -18,6 +18,7 @@ public class Healer extends Role implements Common {
 
     public Healer() {
 
+    	// initialize
         absX = HEALER_START_X - MAP_LEFTUP_X;
         absY = HEALER_START_Y - MAP_LEFTUP_Y;
         dx = 0;
@@ -48,13 +49,13 @@ public class Healer extends Role implements Common {
 
             switch (Player.misson) {
             case 2:
-                // ask player come
+                // ask player come, if player don't, healer will keep talking the words below
                 wordsList = new String[4];
                 wordsList[0] = "\"Noob!\"";
                 wordsList[1] = "\"Have you planted anything?\"";
                 wordsList[2] = "\"Here!\"";
                 wordsList[3] = "\"My patience is precious!\"";
-
+                // keep talking, until player start mission
                 while (!isTalking) {
                     double mood = new Random().nextDouble();
                     if (mood >= 0.60) {// is mood good enough to talk
@@ -106,7 +107,7 @@ public class Healer extends Role implements Common {
                 Player.isTalking = false;
                 isTalking = false;
 
-                // wait for player complete the misson
+                // wait for player complete the mission
                 init(3);
                 wordsList = new String[4];
                 wordsList[0] = "\"Hury up!\"";
@@ -131,7 +132,7 @@ public class Healer extends Role implements Common {
                     }
                 }
 
-                // finish the misson
+                // finish the mission
                 init(6);
                 wordsList = new String[7];
                 wordsList[0] = "\"Finally.\"";
@@ -191,12 +192,15 @@ public class Healer extends Role implements Common {
                 Player.isTalking = false;
                 isTalking = false;
             default:
+            	// this part is similar in other NPC, so just annotation here
+            	// when mission completed, healer will randomly talk words below
                 wordsList = new String[4];
                 wordsList[0] = "\"I'm the only priest.\"";
                 wordsList[1] = "\"By the holy light!\"";
                 wordsList[2] = "\"I love flowers, really.\"";
                 wordsList[3] = "\"What to do...What to do...\"";
 
+                // when mission completed, if player talk with healer, she will respond the words below
                 while (!isTalking) {
                     if (!isTalking) {
                         double mood = new Random().nextDouble();
@@ -227,6 +231,8 @@ public class Healer extends Role implements Common {
     @Override
     public void talk() {
         
+    	// this part is similar in other NPC, so just annotation here
+    	// randomly respond to player
         isTalking = true;
 
         wordsList = new String[3];

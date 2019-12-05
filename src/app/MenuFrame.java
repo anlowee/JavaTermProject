@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 public class MenuFrame extends JFrame implements Common {
 	
 	/**
-	 * 
+	 * menu frame
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -47,7 +47,7 @@ public class MenuFrame extends JFrame implements Common {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				dispose();
+				dispose();	// nothing happened
 			}
 		});
 		
@@ -57,11 +57,11 @@ public class MenuFrame extends JFrame implements Common {
 			public void actionPerformed(ActionEvent e) {
 				
 				try {
-					new Save();
+					new Save();	// automatically save
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
-				System.exit(0);
+				System.exit(0);	// quit the game, close entire program
 			}
 		});
 	}

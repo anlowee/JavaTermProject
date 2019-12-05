@@ -13,7 +13,7 @@ import img.ItemImg;
 public class MainFrame extends JFrame {
 
     /**
-     *
+     * this frame is where the game display(including BackgroundPanel)
      */
     private static final long serialVersionUID = 1L;
     
@@ -41,12 +41,13 @@ public class MainFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // initial tool bar
+        // initial bottom bar
         toolBar = new JToolBar();
         toolBar.setLayout(new GridLayout(1, 6));
         toolBar.setFloatable(false);
         getContentPane().add(toolBar, BorderLayout.SOUTH);
 
+        // bottom bar
         seedsJl = new JLabel("SEEDS-1", new ImageIcon(CropsImg.imgCrops[0][0]), JLabel.CENTER);
         rawJl = new JLabel("RAW-2", new ImageIcon(CropsImg.imgCrops[4][5]), JLabel.CENTER);
         proJl = new JLabel("MISSION-3", new ImageIcon(CropsImg.imgCrops[9][5]), JLabel.CENTER);

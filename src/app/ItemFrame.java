@@ -21,7 +21,7 @@ import img.ItemImg;
 public class ItemFrame extends JFrame implements Common {
 
     /**
-     *
+     * this frame is item frame
      */
     private static final long serialVersionUID = 1L;
 
@@ -29,7 +29,7 @@ public class ItemFrame extends JFrame implements Common {
 
     public JLabel[] itemsSelect = new JLabel[CROPS_TOTAL_CATAGORIES];
 
-    private int col, row;// locate the select
+    private int col, row;	// locate the select
 
     public ItemFrame() {
 
@@ -105,7 +105,7 @@ public class ItemFrame extends JFrame implements Common {
                     break;
                 case KeyEvent.VK_ENTER:
                     int id = row * 4 + col;
-                    if (Ware.itemInventory[id] <= 0) {
+                    if (Ware.itemInventory[id] <= 0) {	// make sure player has this kind of item
                         JOptionPane.showMessageDialog(null, "You don't have this kind of item");
                         break;
                     }
@@ -113,10 +113,11 @@ public class ItemFrame extends JFrame implements Common {
                     Farm.bf.setBuff(row, col + 1);
                     switch (row) {
                     case 0:
-                        if (Crops.growBuff > 0) {
+                        if (Crops.growBuff > 0) {	// player cannot use two grow buff at same time
                             JOptionPane.showMessageDialog(null, ITEM_NAME[Crops.growBuff - 1] + " already exists!");
                             break;
                         }
+                        // use it
                         JOptionPane.showMessageDialog(null, ITEM_NAME[id] + " now!");
                         Crops.growBuff = (short) (col + 1);
                         Ware.itemInventory[id]--;

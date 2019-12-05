@@ -5,6 +5,8 @@ import img.RoleImg;
 
 public class NPCAction extends Thread implements Common {
 
+	// this class make NPC randomly move and display the moving GIF
+	
     public Role who;
     public int randomDelay = 0;
 
@@ -23,9 +25,10 @@ public class NPCAction extends Thread implements Common {
             randomDelay++;
             if (randomDelay >= 20) {
                 randomDelay = 0;
-                who.randomAction();
+                who.randomAction();	// each 1000ms, this NPC will randomly act once
             } 
 
+            // move the NPC and display GIF
             if (who.dx != 0 || who.dy != 0) {
                 who.tGif++;
                 if (who.tGif >= 10) {

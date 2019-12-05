@@ -33,43 +33,46 @@ import img.RoleImg;
 public class BackgroundPanel extends JPanel implements Common {
 
     /**
-	 * 
+	 * all game scene will be displayed here
 	 */
 	private static final long serialVersionUID = 1L;
-	private Image imgMap;
+	private Image imgMap;	// game map
 
-    private Player player;
+    private Player player;	// a player object
 
     public void addNPC(Role role) {
-
+    	
+    	// to add a NPC to the game
         NPCs.npc.add(role);
     }
 
     public BackgroundPanel() {
-
+    	
+    	// initialize the panel
         initBoard();
     }
 
     public void checkNPCStatus() {
 
-        //add NPC
-        if (Player.misson >= 1 && !NPCs.flagOldWoman) {
+        // according to the plot's development, determine which NPC show in the game
+        if (Player.misson >= 1 && !NPCs.flagOldWoman) {	// old woman will show up after mission 1 complete
             addNPC(new OldWoman());
             NPCs.flagOldWoman = true;
         }
-        if (Player.misson >= 2 && !NPCs.flagHealer) {
+        if (Player.misson >= 2 && !NPCs.flagHealer) {	// healer will show up after mission 1 complete
             addNPC(new Healer());
             NPCs.flagHealer = true;
         }
-        if (Player.misson >= 3 && !NPCs.flagMage) {
+        if (Player.misson >= 3 && !NPCs.flagMage) {	// mage will show up after mission 1 complete
             addNPC(new Mage());
             NPCs.flagMage = true;
         }
-        if (NPCs.flagRoger) {
+        if (NPCs.flagRoger) {	// when there are 5 rogers and 5 warriors, player win
             if (NPCs.numRoger >= 5) 
-                Player.words = "\"Rogers are enough.\"";
+                Player.words = "\"Rogers are enough.\"";	// rogers cannot more than 5
             else {
-                addNPC(new Roger());
+            	// recruit a roger, and player pay
+                addNPC(new Roger());	
                 Player.money -= 1000;
                 Ware.rawInventory[5] -= 1000;
             }
@@ -77,15 +80,17 @@ public class BackgroundPanel extends JPanel implements Common {
         }
         if (NPCs.flagWarrior) {
             if (NPCs.numWarrior >= 5) 
-                Player.words = "\"Warriors are enough.\"";
+                Player.words = "\"Warriors are enough.\"";	// warrior cannot more than 5
             else {
                 addNPC(new Warrior());
+                // recruit a warrior, and player pay
                 Player.money -= 1000;
                 Ware.rawInventory[10] -= 2000;
             }
             NPCs.flagWarrior = false;
         }
      
+        // make sure all alive NPC's threats
         for (Role role : NPCs.npc) {
             if (!role.npcAction.isAlive())
                 role.npcAction.start();
@@ -94,6 +99,7 @@ public class BackgroundPanel extends JPanel implements Common {
     
     private void checkEnd() {
 		
+    	// check if player complete the final goal
     	if (NPCs.numWarrior >= 5 && NPCs.numRoger >= 5) {
     		JOptionPane.showMessageDialog(null, "Bandits are afraid of you!\nYou are the hero!\nBut you can still enjoy the life here.");
     		Player.words = "\"Not over yet!\"";
@@ -132,9 +138,13 @@ public class BackgroundPanel extends JPanel implements Common {
     }
 
     private void setMapPos() {
+    	
+    	// calculate the left-up corner of map's absolute coordinate
         int x = Math.abs(Player.dx);
         int y = Math.abs(Player.dy);
 
+        // this map coordinate is relative to player's position, make sure that player at the center area of the frame,
+        // if map is not reach the boundary
         if (Player.isOnViewDownSide)
             Map.mapY = Math.max(Map.mapY - y, MAP_Y_MIN);
         if (Player.isOnViewUpSide)
@@ -147,12 +157,13 @@ public class BackgroundPanel extends JPanel implements Common {
 
     private void doGameloop() {
 
-        update();
-        repaint();
+        update();	// update all object in game
+        repaint();	// repaint those objects whose display info have been changed
     }
 
     private class TAdapter extends KeyAdapter {
 
+    	// respond to key events in class Player
         @Override
         public void keyReleased(KeyEvent e) {
 
@@ -168,6 +179,7 @@ public class BackgroundPanel extends JPanel implements Common {
 
     private class Gameloop extends Thread {
 
+    	// all game events develop here
         @Override
         public void run() {
 
@@ -191,8 +203,8 @@ public class BackgroundPanel extends JPanel implements Common {
 		//Player.init();
         player = new Player();
 
-        // add oldman here
-        boolean flag = false;
+        // old man is the first NPC in game, so make sure he has shown in the map
+        boolean flag = false;	// use to check if old man has been added to NPC list
         for (Role role: NPCs.npc) {
         	if (role.id == 0) {
         		flag = true;
@@ -202,14 +214,14 @@ public class BackgroundPanel extends JPanel implements Common {
         if (!flag)
         	addNPC(new OldMan());
 
-        new playerGif().start();
+        new playerGif().start();	// start to display player's GIF
     }
 
     @Override
     public void addNotify() {
         super.addNotify();
 
-        Gameloop gl = new Gameloop();
+        Gameloop gl = new Gameloop();	// when this panel be set, game loop start
         gl.start();
     }
 
@@ -217,7 +229,8 @@ public class BackgroundPanel extends JPanel implements Common {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        drawMap(g);
+        // draw map components here
+        drawMap(g);	
         drawCrops(g);
         drawNPC(g);
     }
@@ -232,6 +245,7 @@ public class BackgroundPanel extends JPanel implements Common {
 
         g.drawImage(Player.img, Player.x, Player.y, null);
 
+        // set font
         g.setColor(player.color); // font color
         g.setFont(Role.nameFont); // name font
         FontMetrics fm = g.getFontMetrics(Role.nameFont); // get middle
@@ -253,6 +267,8 @@ public class BackgroundPanel extends JPanel implements Common {
 
     public void drawNPC(Graphics g) {
 
+    	// sort all NPC including player by there absolute Y coordinate, small Y is behind big Y, if they are equal, small X
+    	// is behind big X. Thus, it make player see all characters from forward to back, make it more real
     	Collections.sort(NPCs.npc, new Comparator<Role>() {
     		
     		@Override
@@ -268,13 +284,15 @@ public class BackgroundPanel extends JPanel implements Common {
     		}
 		});
     	
-    	boolean flag = false;
+    	boolean flag = false;	// use flag to locate which one in list is player
         for (int i = 0; i < NPCs.npc.size(); i++) {
         	Role role = NPCs.npc.get(i);
         	if (i == 0 && Player.absY <= role.absY && !flag) {
         		drawPlayer(g);
         		flag = true;
         	}
+        	
+        	// code below is similar to method drawPlayer(), they draw all other NPC except player
             role.x = role.absX + Map.mapX;
             role.y = role.absY + Map.mapY;
             g.drawImage(role.img, role.x, role.y, null);
@@ -309,6 +327,7 @@ public class BackgroundPanel extends JPanel implements Common {
 
     private class playerGif extends Thread {
 
+    	// this method not only draw player's GIF but also make player randomly talk
         private int cnt = 1; // orgnize the talk
 
         @Override
@@ -331,6 +350,7 @@ public class BackgroundPanel extends JPanel implements Common {
                     }
                 }
 
+                // draw GIF by a custom timer
                 if (Player.dx != 0 || Player.dy != 0) {
                     Player.tGif++;
                     if (Player.tGif >= 10) {
@@ -343,9 +363,9 @@ public class BackgroundPanel extends JPanel implements Common {
                     Player.gif = 2;
                 }
 
-                player.move();
-                setMapPos();
-                Player.img = RoleImg.imgPlayer[Player.dir][Player.gif];
+                player.move();	// move the player, in other word, update player's coordinate
+                setMapPos();	// according to player's coordinate, update map's.
+                Player.img = RoleImg.imgPlayer[Player.dir][Player.gif];	// change player's current image, to realize GIF affection
 
                 try {
                     Thread.sleep(DELAY);

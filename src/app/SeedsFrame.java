@@ -20,7 +20,7 @@ import img.CropsImg;
 public class SeedsFrame extends JFrame implements Common {
 
     /**
-     *
+     * this is seed frame, including all seeds you have
      */
     private static final long serialVersionUID = 1L;
 
